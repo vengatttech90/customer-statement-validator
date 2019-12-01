@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+	<!-- config for STDOUT and SAVE-TO-FILE -->
+	<springProperty name="LOG_HOME" source="LOG_HOME" />
+<!-- 	<property name="LOG_HOME" value="D:/POC/logs" /> -->
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<!-- <target>System.out</target> -->
+		<encoder>
+			<pattern>
+				%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread])
+				%highlight(%-5level) %logger{36}.%M - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="SAVE-TO-FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/log.log</file>
+		<!-- <filter class="ch.qos.logback.classic.filter.ThresholdFilter"> <level>WARN</level> 
+			</filter> -->
+		<!-- <filter class="ch.qos.logback.classic.filter.LevelFilter"> <level>WARN</level> 
+			<onMatch>ACCEPT</onMatch> <onMismatch>DENY</onMismatch> </filter> -->
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level
+				%logger{36}.%M - %msg%n
+			</Pattern>
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>
+				${LOG_HOME}/archived/log_%d{dd-MM-yyyy}.%i.log
+			</fileNamePattern>
+			<maxFileSize>10MB</maxFileSize>
+			<maxHistory>10</maxHistory>
+			<totalSizeCap>100MB</totalSizeCap>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="ASYNC-DEV"
+		class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="SAVE-TO-FILE" />
+		<appender-ref ref="STDOUT" />
+	</appender>
+	<springProfile name="dev">
+		<logger name="com.rabobank" additivity="false" level="debug">
+			<appender-ref ref="ASYNC-DEV" />
+		</logger>
+		<logger name="org.springframework" additivity="false"
+			level="info">
+			<appender-ref ref="ASYNC-DEV" />
+		</logger>
+		<root level="debug">
+			<appender-ref ref="ASYNC-DEV" />
+		</root>
+		<root level="info">
+			<appender-ref ref="ASYNC-DEV" />
+		</root>
+	</springProfile>
+
+	<appender name="ASYNC"
+		class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="SAVE-TO-FILE" />
+	</appender>
+	<springProfile name="prod">
+		<logger name="org.springframework" additivity="false"
+			level="info">
+			<appender-ref ref="ASYNC" />
+		</logger>
+		<logger name="com.rabobank" additivity="false" level="error">
+			<appender-ref ref="ASYNC" />
+		</logger>
+		<root level="debug">
+			<appender-ref ref="ASYNC" />
+		</root>
+		<root level="info">
+			<appender-ref ref="ASYNC" />
+		</root>
+	</springProfile>
+</configuration>
