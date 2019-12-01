@@ -30,7 +30,7 @@ public class StatementValidatorController {
 
 	// validating multple customer's statement from customer A, B , C and generating
 	// Excel report
-	@RequestMapping(path = "/excel/validatedStatement", method = RequestMethod.POST, produces = MediaType.ALL_VALUE, consumes = MediaType.ALL_VALUE)
+	@RequestMapping(path = "/excel/validatedStatement", method = RequestMethod.GET, produces = MediaType.ALL_VALUE, consumes = MediaType.ALL_VALUE)
 	public ResponseEntity<InputStreamResource> generateExcelReportByValidatingStatement(
 			@RequestParam("filePath") String filePath) {
 		logger.info("StatementValidatorController: filePath-->" + filePath);
