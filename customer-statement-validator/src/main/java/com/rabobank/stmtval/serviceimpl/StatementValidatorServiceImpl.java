@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,6 +32,7 @@ import com.rabobank.stmtval.factory.DocExtractorServiceFactory;
 import com.rabobank.stmtval.model.Statement;
 import com.rabobank.stmtval.model.ValidatedStatement;
 import com.rabobank.stmtval.service.DocExtractorService;
+import com.rabobank.stmtval.service.IssueUploadService;
 import com.rabobank.stmtval.service.StatementValidatorService;
 import com.rabobank.stmtval.util.ReportValidatorUtil;
 
@@ -44,7 +46,11 @@ public class StatementValidatorServiceImpl implements StatementValidatorService 
 	@Autowired
 	private ReportValidatorUtil reportGeneratorUtil;
 
+	@Autowired
+	private IssueUploadService issueUploadService;
+
 	private int rowNum = 1;
+
 	public Set<ValidatedStatement> generateReportDataByValidatingStatement(String filePath) {
 		List<Statement> multipleStmt = new ArrayList<Statement>();
 		Set<ValidatedStatement> finalReportData = new HashSet<ValidatedStatement>();
@@ -103,5 +109,12 @@ public class StatementValidatorServiceImpl implements StatementValidatorService 
 					e);
 		}
 		return null;
+	}
+
+	@Override
+	public Map<String, Object> uploadFileAndFetchData(Set<String> fileSet) {
+		logger.info("uploadFileAndFetchData:fileSet==>" + fileSet.toString());
+		Map<String, Object> extractedData = issueUploadService.uploadIssue(fileSet);
+		return extractedData;
 	}
 }
