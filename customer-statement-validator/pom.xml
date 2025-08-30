@@ -20,7 +20,7 @@
 		<commons-csv.version>1.7</commons-csv.version>
 		<poi.version>4.1.1</poi.version>
 		<poi-ooxml.version>4.1.1</poi-ooxml.version>
-		<commons-lang3.version>3.9</commons-lang3.version>
+		<commons-lang3.version>3.18.0</commons-lang3.version>
 		<decimal4j.version>1.0.3</decimal4j.version>
 	</properties>
 
